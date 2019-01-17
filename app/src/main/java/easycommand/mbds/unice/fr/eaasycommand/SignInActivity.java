@@ -61,11 +61,11 @@ public class SignInActivity extends AppCompatActivity {
                     try {
                         JSONObject res = new JSONObject(response.body().string());
                         Toast.makeText(SignInActivity.this, "Connected successfully", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(SignInActivity.this, MenuActivity.class);
-                        Bundle bundle = new Bundle();
+                        Intent intent = new Intent(SignInActivity.this, NfcReadActivity.class);
+                        /*Bundle bundle = new Bundle();
                         bundle.putString("username",res.getString("username"));
                         bundle.putString("email",res.getString("email"));
-                        intent.putExtras(bundle);
+                        intent.putExtras(bundle);*/
                         startActivity(intent);
                     } catch (Exception e) {
                         e.printStackTrace();
