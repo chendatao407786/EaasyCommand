@@ -31,6 +31,7 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
     private MenuApi menuApi = RetrofitInstance.getRetrofitInstance().create(MenuApi.class);
     private ArrayList<String> mCategoryList = new ArrayList<>();
     String TAG = "MenuActivity";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +56,7 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        navigationView.setItemIconTintList(null);
 
         Intent intent = getIntent();
         Bundle data = intent.getExtras();
@@ -126,27 +128,27 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
-    public void loadMenu(final Menu menu){
+    public void loadMenu(final Menu menu) {
 
         Call<ResponseBody> call = menuApi.getMenu("5c3ba2e64c124168b9e24402");
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
 
-                if(response.isSuccessful()){
-                    try{
+                if (response.isSuccessful()) {
+                    try {
                         JSONArray res = new JSONArray(response.body().string());
-                        for(int i = 0; i < res.length(); i++){
+                        for (int i = 0; i < res.length(); i++) {
                             mCategoryList.add(res.getJSONObject(i).getString("_id"));
                         }
-                        for(int i = 0;i < mCategoryList.size();i++){
-                            menu.add(R.id.category,menu.NONE,0,mCategoryList.get(i));
+                        for (int i = 0; i < mCategoryList.size(); i++) {
+                            menu.add(R.id.category, menu.NONE, 0, mCategoryList.get(i));
                         }
-                    }catch (Exception e){
-                        Toast.makeText(MenuActivity.this, "get menu error :/\n"+response.message(), Toast.LENGTH_SHORT).show();
+                    } catch (Exception e) {
+                        Toast.makeText(MenuActivity.this, "get menu error :/\n" + response.message(), Toast.LENGTH_SHORT).show();
                     }
-                }else{
-                    Toast.makeText(MenuActivity.this, "get menu error :/\n"+response.message(), Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(MenuActivity.this, "get menu error :/\n" + response.message(), Toast.LENGTH_SHORT).show();
                 }
 
             }
