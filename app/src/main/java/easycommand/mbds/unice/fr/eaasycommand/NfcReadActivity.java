@@ -30,8 +30,8 @@ public class NfcReadActivity extends MyNfcBaseActivity {
     private int size;
     private byte[] ID_tag;
 
-    private static String copyIdResto = "";
-    private static String copyIdTable = "";
+    static String copyIdResto = "";
+    static String copyIdTable = "";
 
     private LinearLayout mContentLayout;
     private RelativeLayout mScanLayout;
@@ -47,6 +47,8 @@ public class NfcReadActivity extends MyNfcBaseActivity {
         info = (TextView)findViewById(R.id.info_textView);
     }
 
+
+
     private void handleIntent(Intent intent) {
         String action = intent.getAction();
         if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(action)) {
@@ -60,8 +62,6 @@ public class NfcReadActivity extends MyNfcBaseActivity {
             if (MIME_TEXT_PLAIN.equals(type) || MIME_APP.equals(type)) {
                 new NdefReaderTask().execute(tag);
                 Intent it = new Intent(NfcReadActivity.this,MenuActivity.class);
-                it.putExtra("idResto", copyIdResto);
-                it.putExtra("idTable", copyIdTable);
                 startActivity(it);
             } else {
                 Log.d(TAG, "Wrong mime type: " + type);

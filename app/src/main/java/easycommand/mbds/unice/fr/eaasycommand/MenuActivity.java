@@ -69,11 +69,11 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
 
 
         //***************************** ==> to get idResto and idTable
-        Intent intent = getIntent();
-        Bundle data = intent.getExtras();
-        String idResto = data.getString("idResto");
-        String idTable = data.getString("idTable");
-        Toast.makeText(getApplicationContext(), "data received ==> idResto: "+idResto+", idTable: "+idTable, Toast.LENGTH_SHORT).show();
+
+        String idResto = NfcReadActivity.copyIdResto;
+        String idTable = NfcReadActivity.copyIdTable;
+
+        Toast.makeText(getApplicationContext(), "idResto = "+idResto+", idTable = "+idTable, Toast.LENGTH_LONG).show();
 
         Menu menu = navigationView.getMenu();
 
