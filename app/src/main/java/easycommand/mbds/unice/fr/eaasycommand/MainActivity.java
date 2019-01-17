@@ -33,8 +33,6 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(intent);
                 }
 
-                /*Intent intent = new Intent(MainActivity.this,SignInActivity.class);
-                startActivity(intent);*/
             }
         },3000);
     }
