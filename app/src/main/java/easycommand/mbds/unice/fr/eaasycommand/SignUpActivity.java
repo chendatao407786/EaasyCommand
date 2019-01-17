@@ -1,5 +1,6 @@
 package easycommand.mbds.unice.fr.eaasycommand;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -12,6 +13,7 @@ import java.io.IOException;
 import easycommand.mbds.unice.fr.eaasycommand.api.RetrofitInstance;
 import easycommand.mbds.unice.fr.eaasycommand.api.UserClient;
 import easycommand.mbds.unice.fr.eaasycommand.api.model.User;
+import easycommand.mbds.unice.fr.eaasycommand.util.PreferencesManager;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -45,17 +47,21 @@ public class SignUpActivity extends AppCompatActivity {
         });
     }
 
-    public void createUser(String username, String email, String password) {
+    public void createUser(final String username, String email, final String password) {
         Call<ResponseBody> call = userClient.createUser(new User(username, email, password));
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
-                    try {
-                        Toast.makeText(SignUpActivity.this, response.body().string(), Toast.LENGTH_SHORT).show();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    Toast.makeText(SignUpActivity.this, "Created successfully", Toast.LENGTH_SHORT).show();
+
+                    //for saving username and password
+                    PreferencesManager.getInstance(getApplicationContext()).saveUsername(username);
+                    PreferencesManager.getInstance(getApplicationContext()).savePwd(password);
+
+                    //to redirect for login
+                    Intent intent = new Intent(SignUpActivity.this, SignInActivity.class);
+                    startActivity(intent);
                 } else {
                     Toast.makeText(SignUpActivity.this, "CreateUser error :/\n"+response.message(), Toast.LENGTH_SHORT).show();
                 }

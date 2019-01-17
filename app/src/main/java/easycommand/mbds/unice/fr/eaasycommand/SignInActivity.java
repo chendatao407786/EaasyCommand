@@ -13,6 +13,7 @@ import org.json.JSONObject;
 import easycommand.mbds.unice.fr.eaasycommand.api.AuthClient;
 import easycommand.mbds.unice.fr.eaasycommand.api.RetrofitInstance;
 import easycommand.mbds.unice.fr.eaasycommand.api.model.Auth;
+import easycommand.mbds.unice.fr.eaasycommand.util.PreferencesManager;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -34,7 +35,16 @@ public class SignInActivity extends AppCompatActivity {
                     startActivity(intent);
                     return;
                 case R.id.signin_button:
-                    signIn(mUsername.getText().toString().trim(),mPassword.getText().toString().trim());
+                    String username = PreferencesManager.getInstance(getApplicationContext()).loadUsername();
+                    String password = PreferencesManager.getInstance(getApplicationContext()).loadUsername();
+
+                    if((username != null) && (password != null)){ //if exist data of the current user
+                        signIn(username, password);
+                    }else{ //to get values of form
+                        signIn(mUsername.getText().toString().trim(),mPassword.getText().toString().trim());
+
+                    }
+
             }
         }
     };
@@ -52,7 +62,7 @@ public class SignInActivity extends AppCompatActivity {
         mSignUpButton.setOnClickListener(mOnClickListener);
     }
 
-    public void signIn(String username, String password){
+    public void signIn(final String username, final String password){
         Call<ResponseBody> call = authClient.signIn(new Auth(username,password));
         call.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -61,6 +71,11 @@ public class SignInActivity extends AppCompatActivity {
                     try {
                         JSONObject res = new JSONObject(response.body().string());
                         Toast.makeText(SignInActivity.this, "Connected successfully", Toast.LENGTH_SHORT).show();
+
+                        //to save data of current user for the next connexion
+                        PreferencesManager.getInstance(getApplicationContext()).saveUsername(username);
+                        PreferencesManager.getInstance(getApplicationContext()).savePwd(password);
+
                         Intent intent = new Intent(SignInActivity.this, NfcReadActivity.class);
                         /*Bundle bundle = new Bundle();
                         bundle.putString("username",res.getString("username"));
