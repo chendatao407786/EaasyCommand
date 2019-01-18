@@ -9,10 +9,12 @@
 
     <TextView
         android:id="@+id/title"
-        android:gravity="center"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:fontFamily="monospace"
+        android:fontFamily="@font/dancing_script"
+        android:layout_marginLeft="20dp"
+        android:gravity="center_vertical"
+
         android:text="Starter"
         android:textSize="36sp"
         app:layout_constraintTop_toTopOf="parent" />

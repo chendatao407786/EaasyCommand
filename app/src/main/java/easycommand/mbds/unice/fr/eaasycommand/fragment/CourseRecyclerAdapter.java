@@ -6,18 +6,22 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.List;
+import com.bumptech.glide.Glide;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import easycommand.mbds.unice.fr.eaasycommand.R;
 
 public class CourseRecyclerAdapter extends RecyclerView.Adapter<CourseRecyclerAdapter.MyViewHodler> {
 
     private Context context;
-    private List<String> courseList;
-
-    public CourseRecyclerAdapter(Context context, List<String> courseList) {
+//    private List<String> courseList;
+    private JSONArray courseList;
+    public CourseRecyclerAdapter(Context context, JSONArray courseList) {
         this.context = context;
         this.courseList = courseList;
     }
@@ -32,19 +36,35 @@ public class CourseRecyclerAdapter extends RecyclerView.Adapter<CourseRecyclerAd
 
     @Override
     public void onBindViewHolder(@NonNull CourseRecyclerAdapter.MyViewHodler myViewHodler, int i) {
-        myViewHodler.course.setText(courseList.get(i));
+        try {
+            Glide.with(context)
+                    .asBitmap()
+                    .load(courseList.getJSONObject(i).getString("image"))
+                    .into(myViewHodler.imageView);
+            myViewHodler.name_loc.setText(courseList.getJSONObject(i).getString("courseNameLoc"));
+            myViewHodler.name_en.setText(courseList.getJSONObject(i).getString("courseNameEn"));
+            myViewHodler.price.setText(courseList.getJSONObject(i).getString("coursePrice")+" €");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public int getItemCount() {
-        return courseList.size();
+        return courseList.length();
     }
 
     class MyViewHodler extends RecyclerView.ViewHolder {
-        TextView course;
+        TextView name_loc;
+        TextView name_en;
+        TextView price;
+        ImageView imageView;
         public MyViewHodler(@NonNull View itemView) {
             super(itemView);
-            course = itemView.findViewById(R.id.course);
+            imageView = itemView.findViewById(R.id.courseImage);
+            name_loc = itemView.findViewById(R.id.name_loc);
+            name_en = itemView.findViewById(R.id.name_en);
+            price = itemView.findViewById(R.id.price);
         }
     }
 }
