@@ -2,7 +2,6 @@ package easycommand.mbds.unice.fr.eaasycommand;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -16,7 +15,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -84,7 +82,7 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
         Menu menu = navigationView.getMenu();
         SubMenu subMenu = menu.addSubMenu(0,1,0,"Menu");
 
-        loadMenu(subMenu);
+        loadMenu(subMenu,idResto);
     }
 
     @Override
@@ -137,9 +135,9 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-    public void loadMenu(final SubMenu menu) {
+    public void loadMenu(final SubMenu menu,String idResto) {
 
-        Call<ResponseBody> call = menuApi.getMenu("5c3ba2e64c124168b9e24402");
+        Call<ResponseBody> call = menuApi.getMenu(idResto);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
