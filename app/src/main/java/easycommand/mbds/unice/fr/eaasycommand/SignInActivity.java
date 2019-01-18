@@ -42,9 +42,7 @@ public class SignInActivity extends AppCompatActivity {
                         signIn(username, password);
                     }else{ //to get values of form
                         signIn(mUsername.getText().toString().trim(),mPassword.getText().toString().trim());
-
                     }
-
             }
         }
     };
