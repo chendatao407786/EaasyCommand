@@ -64,13 +64,22 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setItemIconTintList(null);
 
-        Intent intent = getIntent();
+        //********************************* ==> i comment this code for testing my nfc code
+        /*Intent intent = getIntent();
         Bundle data = intent.getExtras();
         View headerLayout = navigationView.getHeaderView(0);
         TextView username = headerLayout.findViewById(R.id.username);
         TextView email = headerLayout.findViewById(R.id.email);
         username.setText(data.getString("username"));
-        email.setText(data.getString("email"));
+        email.setText(data.getString("email"));*/
+
+
+        //***************************** ==> to get idResto and idTable
+
+        String idResto = NfcReadActivity.copyIdResto;
+        String idTable = NfcReadActivity.copyIdTable;
+
+        Toast.makeText(getApplicationContext(), "idResto = "+idResto+", idTable = "+idTable, Toast.LENGTH_LONG).show();
 
         Menu menu = navigationView.getMenu();
         SubMenu subMenu = menu.addSubMenu(0,1,0,"Menu");
