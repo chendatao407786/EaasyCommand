@@ -13,6 +13,7 @@ public class PreferencesManager {
 
     //Valeurs a stocker
     private static final String PREFS_USERNAME = "prefs_username";
+    private static final String PREFS_EMAIL = "prefs_email";
     private static final String PREFS_PASSWORD = "prefs_password";
     private static final String PREFS_TOKEN = "prefs_token";
 
@@ -45,6 +46,12 @@ public class PreferencesManager {
         return sharedPreferences.getString(PREFS_USERNAME, null);
     }
 
+    public void saveEmail(String email){
+        sharedPreferences.edit().putString(PREFS_EMAIL, email).apply();
+    }
+    public String loadEmail(){
+        return sharedPreferences.getString(PREFS_EMAIL,null);
+    }
     public void savePwd(String password){
         sharedPreferences.edit().putString(PREFS_PASSWORD, password).apply();
     }
