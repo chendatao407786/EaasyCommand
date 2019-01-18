@@ -35,12 +35,12 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
     private MenuApi menuApi = RetrofitInstance.getRetrofitInstance().create(MenuApi.class);
     private ArrayList<String> mCategoryList = new ArrayList<>();
     private JSONArray mMenu;
-
+    Toolbar toolbar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -146,6 +146,7 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
                     try {
                         JSONObject res = new JSONObject(response.body().string());
                         String restoName = res.getString("restoName");
+                        toolbar.setTitle(restoName);
                         mMenu = new JSONArray(res.getJSONArray("menu").toString());
                         for (int i = 0; i < mMenu.length(); i++) {
                             mCategoryList.add(mMenu.getJSONObject(i).getString("_id"));
