@@ -3,9 +3,7 @@ package easycommand.mbds.unice.fr.eaasycommand;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -15,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -25,7 +24,9 @@ import java.util.ArrayList;
 
 import easycommand.mbds.unice.fr.eaasycommand.api.RetrofitInstance;
 import easycommand.mbds.unice.fr.eaasycommand.api.model.MenuApi;
+import easycommand.mbds.unice.fr.eaasycommand.fragment.AcceuilFragment;
 import easycommand.mbds.unice.fr.eaasycommand.fragment.MenuFragment;
+import easycommand.mbds.unice.fr.eaasycommand.util.PreferencesManager;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -43,14 +44,14 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+//            }
+//        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -63,26 +64,28 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
         navigationView.setItemIconTintList(null);
 
         //********************************* ==> i comment this code for testing my nfc code
-        /*Intent intent = getIntent();
-        Bundle data = intent.getExtras();
+//        Intent intent = getIntent();
+//        Bundle data = intent.getExtras();
         View headerLayout = navigationView.getHeaderView(0);
         TextView username = headerLayout.findViewById(R.id.username);
         TextView email = headerLayout.findViewById(R.id.email);
-        username.setText(data.getString("username"));
-        email.setText(data.getString("email"));*/
-
-
+        username.setText("Bienvenu");
+        email.setText(PreferencesManager.getInstance(getApplicationContext()).loadUsername());
         //***************************** ==> to get idResto and idTable
 
         String idResto = NfcReadActivity.copyIdResto;
-        String idTable = NfcReadActivity.copyIdTable;
-
-        Toast.makeText(getApplicationContext(), "idResto = "+idResto+", idTable = "+idTable, Toast.LENGTH_LONG).show();
+//        String idTable = NfcReadActivity.copyIdTable;
 
         Menu menu = navigationView.getMenu();
         SubMenu subMenu = menu.addSubMenu(0,1,0,"Menu");
 
         loadMenu(subMenu,idResto);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
     }
 
     @Override
@@ -120,6 +123,7 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
+
         String itemName = (String) item.getTitle();
         Toast.makeText(MenuActivity.this,itemName,Toast.LENGTH_LONG).show();
         FragmentManager fragmentManager =getFragmentManager();
@@ -145,7 +149,16 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
                 if (response.isSuccessful()) {
                     try {
                         JSONObject res = new JSONObject(response.body().string());
+                        AcceuilFragment acceuilFragment = new AcceuilFragment();
+                        FragmentManager fragmentManager =getFragmentManager();
+                        FragmentTransaction transaction = fragmentManager.beginTransaction();
+                        transaction.add(R.id.content_menu_activity,acceuilFragment);
                         String restoName = res.getString("restoName");
+                        Bundle bundle = new Bundle();
+                        bundle.putString("restoName",restoName);
+                        acceuilFragment.setArguments(bundle);
+                        transaction.commit();
+
                         toolbar.setTitle(restoName);
                         mMenu = new JSONArray(res.getJSONArray("menu").toString());
                         for (int i = 0; i < mMenu.length(); i++) {
