@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -34,7 +35,6 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
     private MenuApi menuApi = RetrofitInstance.getRetrofitInstance().create(MenuApi.class);
     private ArrayList<String> mCategoryList = new ArrayList<>();
     private JSONArray mMenu;
-    String TAG = "MenuActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -144,8 +144,9 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
 
                 if (response.isSuccessful()) {
                     try {
-                        mMenu = new JSONArray(response.body().string());
-
+                        JSONObject res = new JSONObject(response.body().string());
+                        String restoName = res.getString("restoName");
+                        mMenu = new JSONArray(res.getJSONArray("menu").toString());
                         for (int i = 0; i < mMenu.length(); i++) {
                             mCategoryList.add(mMenu.getJSONObject(i).getString("_id"));
                         }
