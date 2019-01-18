@@ -191,7 +191,6 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
                 break;
             default:
                 menu.add(R.id.category, menu.NONE, 0, category).setIcon(R.drawable.ic_tableware);
-
         }
     }
 }
