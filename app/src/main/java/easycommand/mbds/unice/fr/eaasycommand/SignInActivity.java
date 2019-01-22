@@ -26,23 +26,19 @@ public class SignInActivity extends AppCompatActivity {
     EditText mPassword;
     Button mSignUpButton;
     Button mSignInButton;
-    private  View.OnClickListener mOnClickListener = new View.OnClickListener() {
+    private View.OnClickListener mOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            switch (v.getId()){
+            switch (v.getId()) {
                 case R.id.signup_button:
-                    Intent intent = new Intent(SignInActivity.this,SignUpActivity.class);
+                    Intent intent = new Intent(SignInActivity.this, SignUpActivity.class);
                     startActivity(intent);
-                    return;
+                    break;
                 case R.id.signin_button:
-                    String username = PreferencesManager.getInstance(getApplicationContext()).loadUsername();
-                    String password = PreferencesManager.getInstance(getApplicationContext()).loadUsername();
-
-                    if((username != null) && (password != null)){ //if exist data of the current user
-                        signIn(username, password);
-                    }else{ //to get values of form
-                        signIn(mUsername.getText().toString().trim(),mPassword.getText().toString().trim());
-                    }
+//                    String username = PreferencesManager.getInstance(getApplicationContext()).loadUsername();
+//                    String password = PreferencesManager.getInstance(getApplicationContext()).loadUsername();
+                    signIn(mUsername.getText().toString().trim(), mPassword.getText().toString().trim());
+                    break;
             }
         }
     };
@@ -60,14 +56,14 @@ public class SignInActivity extends AppCompatActivity {
         mSignUpButton.setOnClickListener(mOnClickListener);
     }
 
-    public void signIn(final String username, final String password){
-        Call<ResponseBody> call = authClient.signIn(new Auth(username,password));
+    public void signIn(final String username, final String password) {
+        Call<ResponseBody> call = authClient.signIn(new Auth(username, password));
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
                     try {
-                        JSONObject res = new JSONObject(response.body().string());
+//                        JSONObject res = new JSONObject(response.body().string());
                         Toast.makeText(SignInActivity.this, "Connected successfully", Toast.LENGTH_SHORT).show();
 
                         //to save data of current user for the next connexion
@@ -81,16 +77,17 @@ public class SignInActivity extends AppCompatActivity {
                         intent.putExtras(bundle);*/
                         startActivity(intent);
                     } catch (Exception e) {
+                        Toast.makeText(SignInActivity.this, "connection error :/\n" + response.body(), Toast.LENGTH_SHORT).show();
                         e.printStackTrace();
                     }
                 } else {
-                    Toast.makeText(SignInActivity.this, "CreateUser error :/\n"+response.message(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SignInActivity.this, "connection error :/\n"+response.message(), Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Toast.makeText(SignInActivity.this, "CreateUser error :/\n" + t, Toast.LENGTH_SHORT).show();
+                Toast.makeText(SignInActivity.this, "connection 2 failed :/\n" + t, Toast.LENGTH_SHORT).show();
             }
         });
     }
